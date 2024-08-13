@@ -4,6 +4,7 @@ import dev.dipeshshrestha.moviesApi.documents.Movie;
 import dev.dipeshshrestha.moviesApi.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,5 +22,10 @@ public class MovieController {
     @GetMapping("/")
     public List<Movie> getAllMovies(){
         return movieService.getAllMovies();
+    }
+
+    @GetMapping("/{id}")
+    public Movie getSingleMovie(@PathVariable("id") String imdbId){
+        return movieService.getSingleMovie(imdbId);
     }
 }

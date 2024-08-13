@@ -21,4 +21,8 @@ public class MovieService {
     public List<Movie> getAllMovies() {
         return movieRepository.findAll();
     }
+
+    public Movie getSingleMovie(String imdbId) {
+        return movieRepository.findByImdbId(imdbId);
+    }
 }
