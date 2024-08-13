@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### dot env ###
+src/main/resources/.env
