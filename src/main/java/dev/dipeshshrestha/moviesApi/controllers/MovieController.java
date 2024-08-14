@@ -3,6 +3,8 @@ package dev.dipeshshrestha.moviesApi.controllers;
 import dev.dipeshshrestha.moviesApi.documents.Movie;
 import dev.dipeshshrestha.moviesApi.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +22,8 @@ public class MovieController {
     }
 
     @GetMapping("/")
-    public List<Movie> getAllMovies(){
-        return movieService.getAllMovies();
+    public ResponseEntity<List<Movie>> getAllMovies(){
+        return new ResponseEntity<>(movieService.getAllMovies(), HttpStatus.OK);
     }
 
     /**
@@ -30,7 +32,7 @@ public class MovieController {
      * @return Movie
      */
     @GetMapping("/{id}")
-    public Movie getSingleMovie(@PathVariable("id") String imdbId){
-        return movieService.getSingleMovie(imdbId);
+    public ResponseEntity<Movie> getSingleMovie(@PathVariable("id") String imdbId){
+        return new ResponseEntity<>(movieService.getSingleMovie(imdbId), HttpStatus.OK);
     }
 }
