@@ -24,6 +24,11 @@ public class MovieController {
         return movieService.getAllMovies();
     }
 
+    /**
+     * Endpoint for retrieving single movie using imdb id of movie
+     * @param imdbId retrieved as a Path variable in HTTP request
+     * @return Movie
+     */
     @GetMapping("/{id}")
     public Movie getSingleMovie(@PathVariable("id") String imdbId){
         return movieService.getSingleMovie(imdbId);
