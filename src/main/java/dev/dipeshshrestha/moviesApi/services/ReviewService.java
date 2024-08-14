@@ -2,10 +2,12 @@ package dev.dipeshshrestha.moviesApi.services;
 
 import dev.dipeshshrestha.moviesApi.documents.Movie;
 import dev.dipeshshrestha.moviesApi.documents.Review;
+import dev.dipeshshrestha.moviesApi.exceptions.MovieNotFoundException;
 import dev.dipeshshrestha.moviesApi.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +21,19 @@ public class ReviewService {
     @Autowired
     private MongoTemplate mongoTemplate;
     public Review createReview(Review review, String movieImdbId) {
-        Review newReview = reviewRepository.insert(review);
-        mongoTemplate.update(Movie.class)
-                .matching(Criteria.where("imdbId").is(movieImdbId))
-                .apply(new Update().push("reviewIds",review))
-                .first();
-        return newReview;
+        // check if movieImdbId passed by client is correct
+        boolean isMoviePresent = mongoTemplate.exists(
+                Query.query(Criteria.where("imdbId").is(movieImdbId)),
+                Movie.class
+        );
+        if(isMoviePresent){
+            Review newReview = reviewRepository.insert(review);
+            mongoTemplate.update(Movie.class)
+                    .matching(Criteria.where("imdbId").is(movieImdbId))
+                    .apply(new Update().push("reviewIds",review))
+                    .first();
+            return newReview;
+        }
+        else throw new MovieNotFoundException("Movie with imdb id as: "+movieImdbId+" not found.");
     }
 }
