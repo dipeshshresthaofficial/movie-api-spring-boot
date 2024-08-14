@@ -18,6 +18,13 @@ public class ReviewService {
     public ReviewService(ReviewRepository reviewRepository){
         this.reviewRepository = reviewRepository;
     }
+
+    /**
+     * Although Repositories helps us to interact with database and perform certain operations quickly
+     * but repositories may not be able to handle complex query so we can make use of Template
+     * (in this case "MongoTemplate") that helps us to easily interact with database and perform
+     * complex operations.
+     */
     @Autowired
     private MongoTemplate mongoTemplate;
     public Review createReview(Review review, String movieImdbId) {
@@ -28,10 +35,14 @@ public class ReviewService {
         );
         if(isMoviePresent){
             Review newReview = reviewRepository.insert(review);
+            /**
+             * Here we need to update the Movie collection with newly created review
+             * so using repository it is alitlle difficult so we are using MongoTemplate
+             */
             mongoTemplate.update(Movie.class)
                     .matching(Criteria.where("imdbId").is(movieImdbId))
                     .apply(new Update().push("reviewIds",review))
-                    .first();
+                    .first(); // this make sure only first entry is updated.
             return newReview;
         }
         else throw new MovieNotFoundException("Movie with imdb id as: "+movieImdbId+" not found.");

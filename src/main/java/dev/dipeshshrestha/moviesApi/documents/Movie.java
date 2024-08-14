@@ -25,7 +25,7 @@ public class Movie {
     private List<String> genres;
     private List<String> backdrops;
     // DocumentReference annotation helps to store only ids of review
-    // since other review data are stored in other collection.
+    // since other review data are stored in Review collection.
     @DocumentReference
     private List<Review> reviewIds;
 }
